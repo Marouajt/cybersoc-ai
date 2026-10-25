@@ -1,0 +1,3 @@
+# Ce dossier contient les JSONL normalisés et les listes d'IDs valides
+# (mitre_ids.txt, cve_ids.txt, cwe_ids.txt). Il est versionné : ces fichiers
+# sont petits et indispensables à la détection d'hallucination.

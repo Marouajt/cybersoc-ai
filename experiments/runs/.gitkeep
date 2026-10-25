@@ -1,0 +1,2 @@
+# Résultats de runs (config.json, metrics.json, raw_predictions.jsonl).
+# Le contenu est versionné : un chiffre du rapport doit pointer vers un fichier lisible.

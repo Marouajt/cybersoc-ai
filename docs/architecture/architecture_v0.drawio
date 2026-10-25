@@ -1,0 +1,237 @@
+<mxfile host="app.diagrams.net" modified="2026-10-25T09:00:00.000Z" agent="CyberSOC AI" version="24.7.5" type="device">
+  <diagram id="cybersoc-arch-v0" name="Architecture v0">
+    <mxGraphModel dx="1600" dy="1000" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ============ LANE 1 : INGESTION ============ -->
+        <mxCell id="l1" value="1 · Ingestion — étape 1" style="swimlane;startSize=28;html=1;rounded=0;fillColor=#f8f9fa;strokeColor=#666666;fontStyle=1;fontSize=12;horizontal=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="1520" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="a1" value="Alerte brute&lt;br&gt;EVTX / JSON / SIEM" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f0fe;strokeColor=#1a56db;fontSize=11;" vertex="1" parent="l1">
+          <mxGeometry x="40" y="45" width="250" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="a2" value="Normalisation&lt;br&gt;schéma Alert (Pydantic)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f0fe;strokeColor=#1a56db;fontSize=11;" vertex="1" parent="l1">
+          <mxGeometry x="360" y="45" width="250" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="a3" value="Extraction d'entités&lt;br&gt;IP · host · user · hash · CVE" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f0fe;strokeColor=#1a56db;fontSize=11;" vertex="1" parent="l1">
+          <mxGeometry x="680" y="45" width="280" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="ea1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#333333;" edge="1" parent="l1" source="a1" target="a2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ea2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#333333;" edge="1" parent="l1" source="a2" target="a3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ============ LANE 2 : CONNAISSANCES ============ -->
+        <mxCell id="l2" value="2 · Connaissances — étapes 1, 3, 4" style="swimlane;startSize=28;html=1;rounded=0;fillColor=#f8f9fa;strokeColor=#666666;fontStyle=1;fontSize=12;horizontal=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="180" width="1520" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="s1" value="Sources&lt;br&gt;MITRE ATTACK · CISA KEV&lt;br&gt;CWE · threat intel" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#1a56db;fontSize=11;" vertex="1" parent="l2">
+          <mxGeometry x="30" y="45" width="240" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" value="Normalisation JSONL&lt;br&gt;+ listes d'IDs valides" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f0fe;strokeColor=#1a56db;fontSize=11;" vertex="1" parent="l2">
+          <mxGeometry x="310" y="45" width="240" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" value="Chunking 300–500 tokens&lt;br&gt;chevauchement 10–15 %" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f0fe;strokeColor=#1a56db;fontSize=11;" vertex="1" parent="l2">
+          <mxGeometry x="590" y="45" width="240" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" value="Vector store&lt;br&gt;(Chroma — étape 3)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#e8f0fe;strokeColor=#1a56db;fontSize=11;" vertex="1" parent="l2">
+          <mxGeometry x="870" y="45" width="200" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="s5" value="Neo4j — Knowledge Graph&lt;br&gt;(étape 4)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#e8f0fe;strokeColor=#1a56db;fontSize=11;" vertex="1" parent="l2">
+          <mxGeometry x="1110" y="45" width="200" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="s6" value="Import STIX&lt;br&gt;techniques · groupes · malwares" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#1a56db;fontSize=11;" vertex="1" parent="l2">
+          <mxGeometry x="590" y="125" width="240" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="es1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#333333;" edge="1" parent="l2" source="s1" target="s2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="es2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#333333;" edge="1" parent="l2" source="s2" target="s3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="es3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#333333;" edge="1" parent="l2" source="s3" target="s4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="es4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#333333;dashed=1;" edge="1" parent="l2" source="s1" target="s5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ============ LANE 3 : RETRIEVAL ============ -->
+        <mxCell id="l3" value="3 · Retrieval — étapes 3 et 4 (les 4 modes, même script d'évaluation)" style="swimlane;startSize=28;html=1;rounded=0;fillColor=#f8f9fa;strokeColor=#666666;fontStyle=1;fontSize=12;horizontal=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="360" width="1520" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="m1" value="No-RAG&lt;br&gt;baseline" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#9e9e9e;fontSize=11;" vertex="1" parent="l3">
+          <mxGeometry x="60" y="45" width="280" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="m2" value="Vector-RAG&lt;br&gt;top-k sémantique" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f0fe;strokeColor=#1a56db;fontSize=11;" vertex="1" parent="l3">
+          <mxGeometry x="420" y="45" width="280" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="m3" value="Graph-RAG&lt;br&gt;sous-graphe vers texte" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f0fe;strokeColor=#1a56db;fontSize=11;" vertex="1" parent="l3">
+          <mxGeometry x="780" y="45" width="280" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="m4" value="Hybrid-RAG&lt;br&gt;RRF(vecteur, graphe)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f0fe;strokeColor=#1a56db;fontSize=11;" vertex="1" parent="l3">
+          <mxGeometry x="1140" y="45" width="280" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- ============ LANE 4 : MODELE ============ -->
+        <mxCell id="l4" value="4 · Modèle — étapes 2, 5, 6" style="swimlane;startSize=28;html=1;rounded=0;fillColor=#f8f9fa;strokeColor=#666666;fontStyle=1;fontSize=12;horizontal=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="490" width="1520" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="p1" value="Prompt système SOC&lt;br&gt;sortie JSON stricte" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6f4ea;strokeColor=#137333;fontSize=11;" vertex="1" parent="l4">
+          <mxGeometry x="60" y="45" width="280" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="p2" value="SLM&lt;br&gt;Qwen2.5-3B · Phi-3.5-mini" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6f4ea;strokeColor=#137333;fontSize=11;" vertex="1" parent="l4">
+          <mxGeometry x="420" y="45" width="280" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="p3" value="Adaptateur LoRA&lt;br&gt;+ quantification FP16/INT8/INT4" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6f4ea;strokeColor=#137333;fontSize=11;" vertex="1" parent="l4">
+          <mxGeometry x="780" y="45" width="280" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="p4" value="vLLM&lt;br&gt;batching · prefix caching · KV cache" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6f4ea;strokeColor=#137333;fontSize=11;" vertex="1" parent="l4">
+          <mxGeometry x="1140" y="45" width="280" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ep1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#333333;" edge="1" parent="l4" source="p1" target="p2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ep2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#333333;" edge="1" parent="l4" source="p2" target="p3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ep3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#333333;" edge="1" parent="l4" source="p3" target="p4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ============ LANE 5 : AGENTS ============ -->
+        <mxCell id="l5" value="5 · Orchestration agentique — étape 7 (LangGraph, état partagé + checkpointer)" style="swimlane;startSize=28;html=1;rounded=0;fillColor=#f8f9fa;strokeColor=#666666;fontStyle=1;fontSize=12;horizontal=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="620" width="1520" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="o1" value="Triage&lt;br&gt;(priorité, arrêt si basse)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e8fd;strokeColor=#6b21a8;fontSize=11;" vertex="1" parent="l5">
+          <mxGeometry x="60" y="45" width="220" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="o2" value="Investigation&lt;br&gt;orchestrateur" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e8fd;strokeColor=#6b21a8;fontSize=11;" vertex="1" parent="l5">
+          <mxGeometry x="320" y="45" width="220" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="o3" value="Agent RAG" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e8fd;strokeColor=#6b21a8;fontSize=11;" vertex="1" parent="l5">
+          <mxGeometry x="580" y="45" width="220" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="o4" value="Agent&lt;br&gt;Knowledge Graph" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e8fd;strokeColor=#6b21a8;fontSize=11;" vertex="1" parent="l5">
+          <mxGeometry x="840" y="45" width="220" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="o5" value="Agent&lt;br&gt;Threat Intelligence" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3e8fd;strokeColor=#6b21a8;fontSize=11;" vertex="1" parent="l5">
+          <mxGeometry x="1100" y="45" width="220" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="eo1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#333333;" edge="1" parent="l5" source="o1" target="o2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eo2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#333333;" edge="1" parent="l5" source="o2" target="o3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eo3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#333333;" edge="1" parent="l5" source="o3" target="o4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eo4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#333333;" edge="1" parent="l5" source="o4" target="o5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ============ LANE 6 : ACTION CONTROLEE ============ -->
+        <mxCell id="l6" value="6 · Action contrôlée — étape 8 (jamais d'exécution autonome)" style="swimlane;startSize=28;html=1;rounded=0;fillColor=#f8f9fa;strokeColor=#666666;fontStyle=1;fontSize=12;horizontal=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="760" width="1520" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="r1" value="Action structurée&lt;br&gt;type · cible · preuve · risque" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6f4ea;strokeColor=#137333;fontSize=11;" vertex="1" parent="l6">
+          <mxGeometry x="30" y="45" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="r2" value="Validation&lt;br&gt;allowlist · cible connue&lt;br&gt;ressource non protégée" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff4e5;strokeColor=#b45309;fontSize=10;" vertex="1" parent="l6">
+          <mxGeometry x="270" y="35" width="230" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="r3" value="statut = PENDING" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff4e5;strokeColor=#b45309;dashed=1;fontSize=11;" vertex="1" parent="l6">
+          <mxGeometry x="540" y="45" width="170" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="r4" value="Approbation&lt;br&gt;analyste (IHM)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff4e5;strokeColor=#b45309;fontSize=11;fontStyle=1;" vertex="1" parent="l6">
+          <mxGeometry x="750" y="45" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="r5" value="Exécution sandbox&lt;br&gt;état simulé, zéro commande réelle" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6f4ea;strokeColor=#137333;fontSize=11;" vertex="1" parent="l6">
+          <mxGeometry x="970" y="45" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="r6" value="Journal d'audit&lt;br&gt;proposée → validée →&lt;br&gt;approuvée → exécutée" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f0fe;strokeColor=#1a56db;fontSize=11;" vertex="1" parent="l6">
+          <mxGeometry x="1230" y="45" width="230" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="er1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#333333;" edge="1" parent="l6" source="r1" target="r2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="er2" value="acceptée" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#333333;fontSize=10;" edge="1" parent="l6" source="r2" target="r3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="er3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#333333;" edge="1" parent="l6" source="r3" target="r4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="er4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#333333;" edge="1" parent="l6" source="r4" target="r5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="er5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#333333;" edge="1" parent="l6" source="r5" target="r6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ============ LANE 7 : SECURITE ============ -->
+        <mxCell id="l7" value="7 · Sécurité du LLM — étape 9 (attaquer, mesurer, défendre, remesurer)" style="swimlane;startSize=28;html=1;rounded=0;fillColor=#f8f9fa;strokeColor=#666666;fontStyle=1;fontSize=12;horizontal=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="920" width="1520" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="x1" value="Contenu non fiable délimité&lt;br&gt;détecteur d'injection" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fde8e8;strokeColor=#c81e1e;fontSize=11;" vertex="1" parent="l7">
+          <mxGeometry x="60" y="45" width="300" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="x2" value="Validation de sortie&lt;br&gt;schéma + IDs existants" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fde8e8;strokeColor=#c81e1e;fontSize=11;" vertex="1" parent="l7">
+          <mxGeometry x="400" y="45" width="300" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="x3" value="Masquage secrets / PII&lt;br&gt;filtre d'entrée et de sortie" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fde8e8;strokeColor=#c81e1e;fontSize=11;" vertex="1" parent="l7">
+          <mxGeometry x="740" y="45" width="300" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="x4" value="Allowlist d'outils&lt;br&gt;moindre privilège, sandbox" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fde8e8;strokeColor=#c81e1e;fontSize=11;" vertex="1" parent="l7">
+          <mxGeometry x="1080" y="45" width="300" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- ============ LANE 8 : INTERFACES ET LLMOPS ============ -->
+        <mxCell id="l8" value="8 · Interfaces et LLMOps — étapes 10 et 11" style="swimlane;startSize=28;html=1;rounded=0;fillColor=#f8f9fa;strokeColor=#666666;fontStyle=1;fontSize=12;horizontal=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1060" width="1520" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="w1" value="FastAPI&lt;br&gt;/alerts · /investigate (SSE)&lt;br&gt;/actions/approve · /audit" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6f4ea;strokeColor=#137333;fontSize=11;" vertex="1" parent="l8">
+          <mxGeometry x="60" y="45" width="320" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="w2" value="React + TypeScript&lt;br&gt;incidents · graphe · approbation" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6f4ea;strokeColor=#137333;fontSize=11;" vertex="1" parent="l8">
+          <mxGeometry x="420" y="45" width="320" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="w3" value="MLflow · Langfuse&lt;br&gt;runs · traces d'agents" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=12;fillColor=#e8f0fe;strokeColor=#1a56db;fontSize=11;" vertex="1" parent="l8">
+          <mxGeometry x="780" y="45" width="240" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ew1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;startArrow=block;strokeColor=#333333;" edge="1" parent="l8" source="w2" target="w1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ============ FLUX INTER-COUCHES ============ -->
+        <mxCell id="f1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#1a56db;strokeWidth=2;" edge="1" parent="1" source="a3" target="o1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#1a56db;strokeWidth=2;" edge="1" parent="1" source="o5" target="r1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#1a56db;strokeWidth=2;" edge="1" parent="1" source="p4" target="o3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;startArrow=block;strokeColor=#1a56db;strokeWidth=2;" edge="1" parent="1" source="w1" target="o2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="f5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#1a56db;strokeWidth=2;dashed=1;" edge="1" parent="1" source="o2" target="w3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Legende -->
+        <mxCell id="lg" value="Légende : bleu = données et stockage · vert = traitement et service · violet = agents · orange = validation et décision humaine · rouge = sécurité · pointillés = trace ou dépendance optionnelle" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=10;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1190" width="1520" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="ti" value="CyberSOC AI — architecture v0 (étape 0) — à réviser aux étapes 4, 7 et 11" style="text;html=1;align=left;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#111111;" vertex="1" parent="1">
+          <mxGeometry x="40" y="10" width="800" height="24" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,35 @@
+# Normalisation des fins de ligne : indispensable car l'équipe est sur
+# Windows / macOS / Linux et les scripts shell seraient corrompus sinon.
+* text=auto eol=lf
+
+# Scripts et configs qui DOIVENT rester en LF (exécutables sous Linux/Docker)
+*.sh            text eol=lf
+*.yml           text eol=lf
+*.yaml          text eol=lf
+*.py            text eol=lf
+*.json          text eol=lf
+*.jsonl         text eol=lf
+Makefile        text eol=lf
+Dockerfile      text eol=lf
+
+# Scripts Windows
+*.ps1           text eol=crlf
+*.bat           text eol=crlf
+*.cmd           text eol=crlf
+
+# Binaires (pas de diff, pas de conversion)
+*.pdf           binary
+*.png           binary
+*.jpg           binary
+*.jpeg          binary
+*.gif           binary
+*.svg           text eol=lf
+*.xlsx          binary
+*.docx          binary
+*.pptx          binary
+*.gguf          binary
+*.safetensors   binary
+*.parquet       binary
+
+# Les fichiers de données volumineux ne polluent pas les stats GitHub
+data/benchmark/*.jsonl  linguist-generated=true

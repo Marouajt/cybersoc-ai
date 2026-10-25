@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cybersoc-ai"
+version = "0.1.0"
+description = "Assistant SOC intelligent : SLM, Hybrid RAG, Knowledge Graph, IA agentique et LLMOps"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Equipe CyberSOC AI" }]
+
+# Dépendances volontairement vides à l'étape 0 : chaque étape ajoute ses
+# paquets ici (ou dans un extra) pour garder un socle installable en quelques
+# secondes. Voir requirements.txt.
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "ruff>=0.6", "PyYAML>=6.0"]
+
+[tool.setuptools]
+packages = { find = { include = ["data*", "models*", "rag*", "kg*", "agents*", "security*", "backend*", "experiments*"] } }
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+extend-exclude = ["kg/neo4j_data", "models/weights", "node_modules", "frontend"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM"]
+ignore = ["E501"]  # longueur gérée par le formateur
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+addopts = "-ra"

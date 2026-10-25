@@ -1,0 +1,42 @@
+# ---------------------------------------------------------------------------
+# Dépendances d'exécution — étape 0 (socle minimal).
+# Chaque étape suivante ajoute sa section, avec un commentaire indiquant
+# l'étape concernée : on garde ainsi traçabilité et installabilité.
+# ---------------------------------------------------------------------------
+
+# --- Socle (étape 0) ------------------------------------------------------
+pydantic>=2.7
+python-dotenv>=1.0
+
+# --- Étape 1 : données ----------------------------------------------------
+# pandas>=2.2
+# mitreattack-python>=3.0
+# stix2>=3.0
+# Faker>=25.0
+# scikit-learn>=1.5
+# rapidfuzz>=3.9
+
+# --- Étape 2 : benchmark SLM / étape 5 : fine-tuning ----------------------
+# torch>=2.3
+# transformers>=4.43
+# peft>=0.12
+# trl>=0.9
+# bitsandbytes>=0.43
+
+# --- Étape 3 : Vector-RAG -------------------------------------------------
+# sentence-transformers>=3.0
+# chromadb>=0.5
+
+# --- Étape 4 : Knowledge Graph -------------------------------------------
+# neo4j>=5.22
+# langchain>=0.2
+
+# --- Étapes 6-8 : inférence, agents, actions -----------------------------
+# vllm>=0.6
+# langgraph>=0.2
+# fastapi>=0.112
+# uvicorn[standard]>=0.30
+
+# --- Étape 10 : LLMOps ----------------------------------------------------
+# mlflow>=2.16
+# langfuse>=2.40

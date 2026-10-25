@@ -1,0 +1,93 @@
+%% CyberSOC AI — architecture v0 (source Mermaid)
+%% Rendu : GitHub, VS Code (extension Mermaid) ou mermaid.live
+%% Version éditable (draw.io) : architecture_v0.drawio
+flowchart TB
+    classDef store fill:#e8f0fe,stroke:#1a56db,stroke-width:1px
+    classDef sec fill:#fde8e8,stroke:#c81e1e,stroke-width:1px
+    classDef svc fill:#e6f4ea,stroke:#137333,stroke-width:1px
+    classDef human fill:#fff4e5,stroke:#b45309,stroke-width:1px,stroke-dasharray: 4 2
+
+    subgraph L1["1 · Ingestion (étape 1)"]
+        A1["Alerte brute<br/>EVTX / JSON / SIEM"] --> A2["Normalisation<br/>schéma Alert (Pydantic)"]
+        A2 --> A3["Extraction d'entités<br/>IP · host · user · hash · CVE"]
+    end
+
+    subgraph L2["2 · Connaissances (étapes 1, 3, 4)"]
+        S1["Sources<br/>MITRE ATTACK · CISA KEV<br/>CWE · threat intel"] --> S2["Chunks 300–500 tokens<br/>+ métadonnées"]
+        S2 --> VEC[("Vector store<br/>Chroma")]:::store
+        S1 --> G1["Import STIX<br/>techniques · groupes · malwares"]
+        G1 --> KG[("Neo4j<br/>Knowledge Graph")]:::store
+        S1 --> IDS["Listes d'IDs valides<br/>mitre_ids · cve_ids · cwe_ids"]
+    end
+
+    subgraph L3["3 · Retrieval (étapes 3 et 4)"]
+        M1["No-RAG"]
+        M2["Vector-RAG<br/>top-k sémantique"]
+        M3["Graph-RAG<br/>sous-graphe vers texte"]
+        M4["Hybrid<br/>RRF(vecteur, graphe)"]
+    end
+
+    subgraph L4["4 · Modèle (étapes 2, 5, 6)"]
+        P1["Prompt système SOC<br/>sortie JSON stricte"]
+        P2["SLM Qwen2.5-3B<br/>Phi-3.5-mini"]
+        P3["Adaptateur LoRA<br/>(étape 5)"]
+        P4["Quantification<br/>FP16 · INT8 · INT4"]
+        P5["vLLM<br/>batching · prefix cache"]:::svc
+    end
+
+    subgraph L5["5 · Orchestration agentique (étape 7, LangGraph)"]
+        O1["Triage"] --> O2["Investigation (orchestrateur)"]
+        O2 --> O3["Agent RAG"]
+        O2 --> O4["Agent Knowledge Graph"]
+        O2 --> O5["Agent Threat Intel"]
+        O3 --> O6["Response"]
+        O4 --> O6
+        O5 --> O6
+        O7["Checkpointer<br/>état partagé"]:::store
+    end
+
+    subgraph L6["6 · Action contrôlée (étape 8)"]
+        R1["Action structurée<br/>type · cible · preuve · risque"] --> R2{"Validation<br/>allowlist · cible connue<br/>ressource non protégée"}
+        R2 -->|refus| R9["Rejet tracé"]
+        R2 -->|acceptée| R3["PENDING"]:::human
+        R3 --> R4["Approbation analyste"]:::human
+        R4 -->|approuvée| R5["Exécution sandbox<br/>état simulé"]:::svc
+        R4 -->|rejetée| R9
+        R5 --> R6["Journal d'audit<br/>proposée · validée · approuvée · exécutée"]:::store
+    end
+
+    subgraph L7["7 · Sécurité du LLM (étape 9)"]
+        SEC1["Délimiteurs contenu non fiable<br/>détecteur d'injection"]:::sec
+        SEC2["Validation de sortie<br/>schéma + IDs existants"]:::sec
+        SEC3["Masquage secrets / PII<br/>filtre de sortie"]:::sec
+        SEC4["Allowlist d'outils<br/>moindre privilège"]:::sec
+    end
+
+    subgraph L8["8 · Interfaces et LLMOps (étapes 10, 11)"]
+        W1["FastAPI<br/>alerts · investigate SSE<br/>actions/approve · audit"]:::svc
+        W2["React + TypeScript<br/>incidents · graphe · approbation"]:::svc
+        W3["MLflow · Langfuse<br/>runs · traces d'agents"]:::store
+    end
+
+    A3 --> O1
+    VEC --> M2
+    KG --> M3
+    M2 --> M4
+    M3 --> M4
+    IDS -.->|anti-hallucination| P1
+    M1 --> P2
+    M2 --> P2
+    M3 --> P2
+    M4 --> P2
+    P1 --> P2 --> P3 --> P4 --> P5
+    P5 --> O3
+    P5 --> O4
+    P5 --> O5
+    O6 --> R1
+    O7 -.-> O2
+    R1 -.-> SEC1
+    R1 -.-> SEC2
+    R1 -.-> SEC4
+    W1 <--> O2
+    W2 <--> W1
+    O2 -.-> W3

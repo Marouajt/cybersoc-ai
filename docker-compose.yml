@@ -1,0 +1,74 @@
+# ---------------------------------------------------------------------------
+# CyberSOC AI — socle de services locaux (étape 0)
+#
+#   docker compose up -d              -> démarre UNIQUEMENT Neo4j (critère étape 0)
+#   docker compose --profile ops up -d -> ajoute MLflow (étape 10)
+#
+# Le profil "ops" isole les services d'observabilité : ils n'entrent pas dans
+# le critère de réussite de l'étape 0 et restent optionnels pour les étudiants
+# dont la machine est limitée.
+# ---------------------------------------------------------------------------
+name: cybersoc-ai
+
+services:
+  # --- Étape 4 : Knowledge Graph -------------------------------------------
+  neo4j:
+    image: neo4j:5
+    container_name: cybersoc-neo4j
+    restart: unless-stopped
+    ports:
+      - "7474:7474"   # HTTP / Neo4j Browser
+      - "7687:7687"   # Bolt (driver Python)
+    environment:
+      # NEO4J_AUTH est le seul mécanisme d'initialisation du mot de passe.
+      NEO4J_AUTH: ${NEO4J_USER:-neo4j}/${NEO4J_PASSWORD:-changeme_local}
+      # Mémoire volontairement bornée : doit tourner sur un laptop 16 Go.
+      NEO4J_server_memory_heap_initial__size: 512m
+      NEO4J_server_memory_heap_max__size: 1G
+      NEO4J_server_memory_pagecache_size: 512m
+      # APOC désactivé en v0 : son téléchargement au démarrage exige un accès
+      # réseau et ferait échouer `docker compose up` hors ligne.
+      # Décommenter à l'étape 4 si les procédures APOC sont nécessaires :
+      # NEO4J_PLUGINS: '["apoc"]'
+      # NEO4J_dbms_security_procedures_unrestricted: apoc.*
+    volumes:
+      - ./kg/neo4j_data:/data
+      - ./kg/neo4j_logs:/logs
+      - ./kg/neo4j_import:/var/lib/neo4j/import
+    healthcheck:
+      # cypher-shell est présent dans l'image officielle : on vérifie que la
+      # base répond vraiment, pas seulement que le port est ouvert.
+      # Les identifiants sont relus depuis NEO4J_AUTH (source unique de vérité) :
+      # un simple changement de mot de passe dans .env ne casse donc pas le test.
+      test:
+        - CMD-SHELL
+        - >-
+          u="$${NEO4J_AUTH%%/*}"; p="$${NEO4J_AUTH#*/}";
+          cypher-shell -a bolt://localhost:7687 -u "$$u" -p "$$p"
+          "RETURN 1 AS ok;" > /dev/null 2>&1 || exit 1
+      interval: 10s
+      timeout: 10s
+      retries: 15
+      start_period: 45s
+
+  # --- Étape 10 : suivi d'expériences (optionnel) --------------------------
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:latest   # TODO étape 10 : épingler un tag précis
+    container_name: cybersoc-mlflow
+    profiles: ["ops"]
+    restart: unless-stopped
+    command: >
+      mlflow server
+      --backend-store-uri sqlite:////mlflow/mlflow.db
+      --default-artifact-root /mlflow/artifacts
+      --host 0.0.0.0
+      --port 5000
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./experiments/mlruns:/mlflow
+
+  # --- Étape 10 : traçage LLM (optionnel) ----------------------------------
+  # Langfuse n'est pas décrit ici : sa stack officielle (web + worker +
+  # Postgres + ClickHouse + Redis + MinIO) reste à importer à l'étape 10,
+  # depuis le dépôt officiel du projet. Voir docs/DECISIONS.md (ADR-0004).

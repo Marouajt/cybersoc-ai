@@ -1,0 +1,81 @@
+# ---------------------------------------------------------------------------
+# CyberSOC AI — .gitignore
+# Principe : le code et les artefacts *dérivés de façon déterministe* sont
+# versionnés ; les données lourdes, les secrets et les états locaux ne le sont pas.
+# ---------------------------------------------------------------------------
+
+# --- Secrets / configuration locale --------------------------------------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+
+# --- Python --------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+.python-version
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+.ipynb_checkpoints/
+
+# --- Node / frontend -----------------------------------------------------
+node_modules/
+frontend/dist/
+frontend/.vite/
+npm-debug.log*
+pnpm-debug.log*
+
+# --- Docker / Neo4j (volumes locaux, jamais versionnés) ------------------
+kg/neo4j_data/
+kg/neo4j_logs/
+kg/neo4j_import/
+experiments/mlruns/
+security/audit.db
+*.sqlite
+*.sqlite3
+*.db
+
+# --- Modèles & artefacts lourds -----------------------------------------
+# Les poids ne vont pas dans Git : on versionne le manifeste (models/MANIFEST.md)
+# et on récupère les poids via le Hub ou DVC.
+models/weights/
+models/adapters/*/adapter_model.safetensors
+models/adapters/*/optimizer.pt
+*.gguf
+*.safetensors
+*.bin
+*.pt
+*.onnx
+
+# --- Données -------------------------------------------------------------
+# data/raw/ : téléchargements bruts (reconstructibles via `make data`)
+data/raw/
+data/interim/
+# data/processed/ et data/benchmark/ : versionnés (petits, indispensables
+# à la reproductibilité). Ne pas les ignorer.
+!data/processed/.gitkeep
+!data/benchmark/.gitkeep
+
+# --- Divers --------------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
+!docs/**/*.log
+tmp/
+scratch/
+.idea/
+.vscode/
+!.vscode/extensions.json
