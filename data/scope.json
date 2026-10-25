@@ -1,0 +1,357 @@
+{
+  "document": "scope",
+  "scope_version": "0.1.0-draft",
+  "project": "CyberSOC AI",
+  "roadmap_step": 1,
+  "block": "A - perimetre fige",
+  "status": "proposed",
+  "frozen_at": null,
+  "random_seed": 42,
+
+  "changelog": [
+    {
+      "version": "0.1.0-draft",
+      "date": "2026-10-25",
+      "change": "Proposition initiale du perimetre : 11 techniques MITRE, 9 types d'alertes, 6 actions, 4 severites. En attente de validation par les 5 membres."
+    }
+  ],
+
+  "identity": {
+    "note": "Ce fichier fige les VALEURS du perimetre (quelles techniques, quelles actions, quelles severites). Il ne fige pas les SCHEMAS de donnees : ceux-ci sont definis a la tache 4 (Bloc C) dans data/schemas.py.",
+    "owner": "M1 - Donnees & RAG",
+    "validation": "les 5 membres ; statut 'proposed' tant que docs/SCOPE.md n'est pas signe",
+    "change_policy": "toute modification apres validation incremente scope_version, invalide le benchmark existant et impose de regenerer les donnees (nouveau hash)"
+  },
+
+  "mitre_techniques": [
+    {
+      "id": "T1566.001",
+      "parent": "T1566",
+      "name": "Spearphishing Attachment",
+      "tactic": "initial-access",
+      "why": "Porte d'entree la plus representee dans les incidents reels d'entreprise ; produit un signal observable (Office lance un processus enfant).",
+      "alert_types": ["office_child_process"],
+      "benign_twin": "Piece jointe .docx d'un fournisseur connu, macros desactivees, aucun processus enfant (WINWORD ne lance rien)."
+    },
+    {
+      "id": "T1204.002",
+      "parent": "T1204",
+      "name": "Malicious File",
+      "tactic": "execution",
+      "why": "Complete T1566.001 : c'est l'action de l'utilisateur qui declenche l'execution. Permet de tester la difference entre 'fichier ouvert' et 'code execute'.",
+      "alert_types": ["office_child_process", "process_creation"],
+      "benign_twin": "Ouverture d'un .xlsm financier avec macro signee et approuvee, processus enfant Excel.exe uniquement."
+    },
+    {
+      "id": "T1059.001",
+      "parent": "T1059",
+      "name": "PowerShell",
+      "tactic": "execution",
+      "why": "Fil rouge du projet (ALR-0042) ; tres frequent en vie reelle et facile a confondre avec l'administration legitime.",
+      "alert_types": ["process_creation", "encoded_command"],
+      "benign_twin": "Un administrateur lance un script PowerShell signe depuis le VPN, commande en clair, cible un serveur de gestion."
+    },
+    {
+      "id": "T1027",
+      "parent": null,
+      "name": "Obfuscated Files or Information",
+      "tactic": "defense-evasion",
+      "why": "Le '-enc' (base64) est le marqueur d'obfuscation le plus lisible ; oblige le modele a ne pas confondre encodage et malveillance.",
+      "alert_types": ["encoded_command"],
+      "benign_twin": "Script de deploiement encode par un outil de gestion de parc (Intune/SCCM), signe, lance depuis un hote de management."
+    },
+    {
+      "id": "T1078",
+      "parent": null,
+      "name": "Valid Accounts",
+      "tactic": "initial-access",
+      "why": "Attaque sans malware : teste la robustesse du modele quand aucun indicateur binaire n'existe (pas de fichier, pas de processus suspect).",
+      "alert_types": ["anomalous_logon", "failed_logon_burst"],
+      "benign_twin": "Compte de service qui se connecte hors horaires apres une rotation de mot de passe planifiee."
+    },
+    {
+      "id": "T1053.005",
+      "parent": "T1053",
+      "name": "Scheduled Task",
+      "tactic": "persistence",
+      "why": "Persistance tres courante, observable par un evenement dedie (4698) ; permet de tester la duree de vie de l'alerte.",
+      "alert_types": ["scheduled_task_created"],
+      "benign_twin": "Tache de mise a jour creee par un installateur logiciel signe, chemin d'execution dans Program Files."
+    },
+    {
+      "id": "T1003.001",
+      "parent": "T1003",
+      "name": "LSASS Memory",
+      "tactic": "credential-access",
+      "why": "Etape charniere avant le mouvement lateral ; oblige a traiter un acces memoire et non un simple processus.",
+      "alert_types": ["lsass_access"],
+      "benign_twin": "Agent antivirus / EDR legitime qui ouvre un handle sur lsass pour analyse, binaire signe et present dans l'allowlist."
+    },
+    {
+      "id": "T1021.001",
+      "parent": "T1021",
+      "name": "Remote Desktop Protocol",
+      "tactic": "lateral-movement",
+      "why": "Mouvement lateral interne : depend de la topologie du monde simule, donc verifie que les entites du jeu de test existent bien dans le graphe.",
+      "alert_types": ["anomalous_logon"],
+      "benign_twin": "Session RDP d'administration planifiee depuis un jump host vers un serveur, dans la fenetre de maintenance."
+    },
+    {
+      "id": "T1041",
+      "parent": null,
+      "name": "Exfiltration Over C2 Channel",
+      "tactic": "exfiltration",
+      "why": "Combine volume et destination externe (IP du fil rouge) ; produit un signal reseau, pas seulement un signal hote.",
+      "alert_types": ["external_connection"],
+      "benign_twin": "Sauvegarde planifiee vers un domaine approuve, volume attendu, horaire fixe."
+    },
+    {
+      "id": "T1105",
+      "parent": null,
+      "name": "Ingress Tool Transfer",
+      "tactic": "command-and-control",
+      "why": "Telechargement d'outil (certutil, bitsadmin) : teste la distinction entre telechargement automatique legitime et outil offensif.",
+      "alert_types": ["external_connection", "process_creation"],
+      "benign_twin": "Mise a jour applicative depuis un CDN approuve, binaire signe, URL du domaine editeur."
+    },
+    {
+      "id": "T1486",
+      "parent": null,
+      "name": "Data Encrypted for Impact",
+      "tactic": "impact",
+      "why": "Ransomware : impose une action immediate et sert a tester le refus d'isoler un actif protege (SRV-DC-01).",
+      "alert_types": ["mass_file_modification"],
+      "benign_twin": "Utilisateur qui compresse un dossier en archive protegee par mot de passe, ou outil de sauvegarde qui ecrit des fichiers chiffres sur un partage dedie."
+    }
+  ],
+
+  "alert_types": [
+    {
+      "id": "process_creation",
+      "label": "Creation de processus",
+      "telemetry": ["windows_security_4688", "sysmon_1"],
+      "description": "Un processus est lance ; l'alerte porte la ligne de commande, le parent et l'utilisateur."
+    },
+    {
+      "id": "office_child_process",
+      "label": "Processus enfant d'une application Office",
+      "telemetry": ["windows_security_4688"],
+      "description": "WINWORD.EXE, EXCEL.EXE ou OUTLOOK.EXE lance un processus enfant (cas typique de T1566.001)."
+    },
+    {
+      "id": "encoded_command",
+      "label": "Commande encodee ou obfusquee",
+      "telemetry": ["windows_security_4688", "sysmon_1"],
+      "description": "Ligne de commande contenant -enc, -EncodedCommand, FromBase64String ou equivalent."
+    },
+    {
+      "id": "failed_logon_burst",
+      "label": "Rafale d'echecs d'authentification",
+      "telemetry": ["windows_security_4625"],
+      "description": "Plusieurs echecs de connexion sur une fenetre courte, meme compte ou meme source."
+    },
+    {
+      "id": "anomalous_logon",
+      "label": "Connexion anormale",
+      "telemetry": ["windows_security_4624", "windows_security_4672"],
+      "description": "Connexion reussie hors horaires, type 10 (RDP) inhabituel, ou depuis un hote jamais vu pour ce compte."
+    },
+    {
+      "id": "scheduled_task_created",
+      "label": "Creation de tache planifiee",
+      "telemetry": ["windows_security_4698", "sysmon_1"],
+      "description": "Creation ou modification d'une tache planifiee, avec son action et son declencheur."
+    },
+    {
+      "id": "lsass_access",
+      "label": "Acces memoire au processus lsass",
+      "telemetry": ["sysmon_10"],
+      "description": "Ouverture d'un handle sur lsass.exe par un processus non allowliste."
+    },
+    {
+      "id": "external_connection",
+      "label": "Connexion vers l'exterieur",
+      "telemetry": ["sysmon_3", "proxy"],
+      "description": "Connexion sortante vers une IP ou un domaine externe, avec le volume echange si disponible."
+    },
+    {
+      "id": "mass_file_modification",
+      "label": "Modification massive de fichiers",
+      "telemetry": ["sysmon_11", "windows_security_4663"],
+      "description": "Nombre anormal de creations ou renommages de fichiers sur un hote en une fenetre courte."
+    }
+  ],
+
+  "telemetry_sources": {
+    "windows_security_4624": "Connexion reussie (logon type 2/3/10)",
+    "windows_security_4625": "Echec de connexion",
+    "windows_security_4663": "Acces a un objet (fichier)",
+    "windows_security_4672": "Privileges speciaux attribues",
+    "windows_security_4688": "Creation de processus",
+    "windows_security_4698": "Creation d'une tache planifiee",
+    "windows_security_4720": "Creation d'un compte utilisateur",
+    "windows_security_4732": "Ajout a un groupe privilegie",
+    "sysmon_1": "Sysmon - creation de processus",
+    "sysmon_3": "Sysmon - connexion reseau",
+    "sysmon_10": "Sysmon - acces au processus",
+    "sysmon_11": "Sysmon - creation de fichier",
+    "sysmon_13": "Sysmon - ecriture dans le registre",
+    "proxy": "Journaux du proxy sortant (domaine, volume)",
+    "note": "Perimetre Windows uniquement. Toute alerte est normalisee vers le schema Alert ; l'evenement brut est conserve dans le champ raw."
+  },
+
+  "actions": {
+    "note": "Liste FERMEE. Toute action hors de cette liste est invalide et doit etre rejetee par le moteur de validation (etape 8). Une seule action attendue par cas.",
+    "items": [
+      {
+        "id": "isolate_host",
+        "target_kind": "host",
+        "reversible": true,
+        "risk": "medium",
+        "description": "Isoler un poste du reseau en conservant la possibilite de le remettre en ligne.",
+        "guard": "rejetee si la cible est un actif protege (SRV-DC-01)"
+      },
+      {
+        "id": "block_ip",
+        "target_kind": "external_ip",
+        "reversible": true,
+        "risk": "low",
+        "description": "Bloquer une IP externe au pare-feu.",
+        "guard": "rejetee si la cible est une IP interne ou une plage reservee"
+      },
+      {
+        "id": "disable_user",
+        "target_kind": "user",
+        "reversible": true,
+        "risk": "high",
+        "description": "Desactiver un compte utilisateur.",
+        "guard": "rejetee si le compte est un compte de service critique ou protege"
+      },
+      {
+        "id": "reset_password",
+        "target_kind": "user",
+        "reversible": true,
+        "risk": "medium",
+        "description": "Forcer la reinitialisation du mot de passe et l'invalidation des sessions.",
+        "guard": "ne remplace pas une desactivation si la compromission est active"
+      },
+      {
+        "id": "create_ticket",
+        "target_kind": "none",
+        "reversible": true,
+        "risk": "low",
+        "description": "Ouvrir un ticket d'investigation pour traitement humain differe.",
+        "guard": "aucune"
+      },
+      {
+        "id": "no_action",
+        "target_kind": "none",
+        "reversible": true,
+        "risk": "none",
+        "description": "Aucune action : cas benin ou faux positif confirme.",
+        "guard": "aucune"
+      }
+    ]
+  },
+
+  "severities": [
+    {
+      "id": "low",
+      "rank": 1,
+      "description": "Anomalie d'hygiene ou de conformite, sans indicateur d'attaque.",
+      "examples": ["connexion hors horaires sans autre signal", "echec de connexion isole"]
+    },
+    {
+      "id": "medium",
+      "rank": 2,
+      "description": "Indicateur suspect isole, non correle, sans impact confirme.",
+      "examples": ["commande encodee sans destination externe", "tache planifiee creee dans un chemin utilisateur"]
+    },
+    {
+      "id": "high",
+      "rank": 3,
+      "description": "Execution confirmee d'un outil offensif, ou correlation de deux signaux independants.",
+      "examples": ["Office lance PowerShell encode", "acces lsass par un binaire non signe"]
+    },
+    {
+      "id": "critical",
+      "rank": 4,
+      "description": "Impact actif en cours ou compromission d'un actif critique.",
+      "examples": ["chiffrement massif en cours", "mouvement lateral vers SRV-DC-01"]
+    }
+  ],
+
+  "difficulty_levels": [
+    { "id": "easy", "description": "Un seul signal explicite suffit (binaire connu malveillant, ligne de commande sans ambiguite)." },
+    { "id": "medium", "description": "Signal explicite mais contexte ambigu, ou deux signaux faibles a correler." },
+    { "id": "hard", "description": "Signal indistinguable d'une activite legitime sans connaissance du contexte (compte, horaire, topologie)." }
+  ],
+
+  "protected_resources": [
+    {
+      "id": "SRV-DC-01",
+      "kind": "host",
+      "reason": "Controleur de domaine : toute isolation est interdite automatiquement (test de l'etape 8)."
+    }
+  ],
+
+  "world": {
+    "users_count": 40,
+    "hosts_count": 40,
+    "workstation_pattern": "WKS-<DEPARTEMENT>-<NN>",
+    "server_pattern": "SRV-<ROLE>-<NN>",
+    "internal_cidr": "10.10.0.0/16",
+    "external_ip_policy": "les cas synthetiques utilisent les plages de documentation TEST-NET (192.0.2.0/24, 198.51.100.0/24, 203.0.113.0/24) afin de ne designer aucune infrastructure reelle ; l'IP 185.220.101.4 du fil rouge ALR-0042 reste une illustration",
+    "departments": ["FIN", "RH", "IT", "MKT", "OPS"],
+    "free_text_language": "francais, avec identifiants techniques en anglais"
+  },
+
+  "dataset_targets": {
+    "cases_min": 250,
+    "cases_max": 500,
+    "cases_target": 400,
+    "benign_ratio_min": 0.4,
+    "benign_ratio_max": 0.5,
+    "real_cases_min": 50,
+    "real_cases_max": 100,
+    "double_annotated_cases": 50,
+    "cohen_kappa_min": 0.8,
+    "retrieval_qa_min": 100,
+    "retrieval_qa_max": 200,
+    "split": { "train": 0.6, "validation": 0.15, "test": 0.25 },
+    "split_key": "scenario_id",
+    "difficulty_distribution": { "easy": 0.3, "medium": 0.45, "hard": 0.25 },
+    "chunk_tokens": { "min": 300, "max": 500, "overlap_ratio": 0.1 },
+    "note": "Les proportions de split s'appliquent aux scenarios (groupes), pas aux lignes : les effectifs reels par split peuvent s'ecarter legerement des cibles (documente dans DATASHEET.md)."
+  },
+
+  "case_rules": [
+    "Chaque scenario malveillant possede un jumeau benin : meme technique, meme telemetrie, contexte legitime.",
+    "Un cas = une alerte = une action attendue et une cible attendue (ou 'none').",
+    "Le champ scenario_id est obligatoire et partage par tous les cas issus du meme scenario.",
+    "Aucune donnee personnelle reelle : utilisateurs generes par Faker, domaines internes fictifs.",
+    "Toute entite citee dans une alerte doit exister dans le monde simule, donc dans le graphe de l'etape 4.",
+    "Les identifiants MITRE, CVE et CWE cites doivent appartenir aux listes valides (data/processed/*_ids.txt) : c'est la base de la mesure d'hallucination."
+  ],
+
+  "out_of_scope": [
+    { "item": "Cloud (Azure, AWS, GCP), conteneurs et Kubernetes", "reason": "telemetrie et topologie differentes ; garder un perimetre Windows homogene" },
+    { "item": "Postes Linux et macOS", "reason": "un seul modele de journaux (Windows + Sysmon) pour rester comparable" },
+    { "item": "OT / ICS et systemes industriels", "reason": "hors du perimetre d'un SOC bureautique classique" },
+    { "item": "Mobile (Android, iOS)", "reason": "aucun journal equivalent disponible" },
+    { "item": "Attaques physiques et ingenierie sociale hors email (vishing)", "reason": "non observables dans la telemetrie retenue" },
+    { "item": "Supply chain logicielle (T1195)", "reason": "necessite des artefacts de build que le monde simule ne produit pas" },
+    { "item": "Exfiltration par canal physique ou par impression", "reason": "non detectable dans les journaux choisis" },
+    { "item": "Toute execution reelle d'action (pare-feu, AD)", "reason": "les actions sont simulees en sandbox, jamais appliquees" },
+    { "item": "Plus de 12 techniques MITRE", "reason": "au-dela, le benchmark se dilue et l'annotation devient inexploitable" }
+  ],
+
+  "consistency_checks": {
+    "techniques_count_range": [8, 12],
+    "actions_are_closed": true,
+    "every_technique_has_benign_twin": true,
+    "alert_types_referenced_must_exist": true,
+    "split_sums_to_one": true,
+    "protected_host_present": "SRV-DC-01"
+  }
+}

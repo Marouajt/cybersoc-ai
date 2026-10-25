@@ -21,7 +21,7 @@ Alerte → Détection → Investigation RAG/KG → Analyse agentique → Explica
 | Étape | Contenu | Statut |
 |---|---|---|
 | 0 | Cadrage, dépôt, rôles, architecture v0, Docker | 🟡 **socle en place** — 3 points à finaliser (voir [`docs/CHECKLIST_ETAPE0.md`](docs/CHECKLIST_ETAPE0.md)) |
-| 1 | Données et jeu de test | ⬜ à démarrer |
+| 1 | Données et jeu de test | 🟡 **bloc A rédigé** — périmètre en attente de signature des 5 membres ([`docs/SCOPE.md`](docs/SCOPE.md)) |
 | 2 | Benchmark des SLM | ⬜ |
 | 3 | Vector-RAG | ⬜ |
 | 4 | Knowledge Graph, Graph-RAG, Hybrid RAG | ⬜ |

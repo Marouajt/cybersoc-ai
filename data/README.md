@@ -23,7 +23,8 @@ data/
 ├── schemas.py      # Alert, BenchmarkCase, RetrievalQA (Pydantic v2)   [étape 1]
 ├── build_all.py    # point d'entrée de `make data`                     [étape 1]
 ├── DATASHEET.md    # sources, licences, méthode, répartition, limites  [étape 1]
-└── scope.json      # périmètre figé : techniques MITRE, actions, sévérités [étape 1]
+├── scope.json      # périmètre figé : techniques, alertes, actions, sévérités  ✅ bloc A
+└── validate_scope.py  # contrôle de cohérence du périmètre (stdlib, exécutable) ✅ bloc A
 ```
 
 ## Ce qui est versionné et ce qui ne l'est pas
