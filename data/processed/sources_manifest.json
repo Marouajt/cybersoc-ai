@@ -1,0 +1,103 @@
+{
+  "avertissement_licences": "Les conditions d'utilisation des trois sources doivent etre confirmees dans DATASHEET.md (tache 12) avant toute publication.",
+  "sources": [
+    {
+      "nom": "mitre_attack_enterprise",
+      "url": "https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack/enterprise-attack.json",
+      "fichier": "enterprise-attack.json",
+      "producteur": "MITRE",
+      "usage": "techniques, tactiques, groupes, logiciels, campagnes",
+      "licence": "MITRE ATT&CK Terms of Use (aucun fichier LICENSE dans le depot)",
+      "licence_a_verifier": true,
+      "fichier_local": "data/raw/enterprise-attack.json",
+      "octets": 55271014,
+      "sha256": "81113ba98afa2928f3dcff62022539f7ce30c315c32e14422f11ff95ce534352",
+      "enregistrements_normalises": 867
+    },
+    {
+      "nom": "cisa_kev",
+      "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+      "fichier": "known_exploited_vulnerabilities.json",
+      "producteur": "CISA",
+      "usage": "CVE reellement exploitees, avec produits et actions attendues",
+      "licence": "publication officielle CISA (conditions a confirmer)",
+      "licence_a_verifier": true,
+      "fichier_local": "data/raw/known_exploited_vulnerabilities.json",
+      "octets": 1807090,
+      "sha256": "97a6e54bc74c651ab3c55657191db9adec6c63b05ca54e4205327cfd97a8fb70",
+      "enregistrements_normalises": 1756
+    },
+    {
+      "nom": "mitre_cwe",
+      "url": "https://cwe.mitre.org/data/xml/cwec_latest.xml.zip",
+      "fichier": "cwec_latest.xml.zip",
+      "producteur": "MITRE",
+      "usage": "faiblesses CWE, descriptions, mitigations, consequences",
+      "licence": "CWE Terms of Use (a confirmer)",
+      "licence_a_verifier": true,
+      "fichier_local": "data/raw/cwec_latest.xml.zip",
+      "octets": 2021351,
+      "sha256": "3976f599e5e5200219a3108bb896d06e2a88fbb293369e1883cb423a5e9d7d50",
+      "enregistrements_normalises": 969
+    }
+  ],
+  "enregistrements": {
+    "mitre_techniques": 867,
+    "mitre_groupes": 193,
+    "mitre_logiciels": 845,
+    "mitre_campagnes": 57,
+    "kev_cves": 1756,
+    "cwe_faiblesses": 969
+  },
+  "entetes_sources": {
+    "kev": {
+      "catalogue_version": "2026.10.23",
+      "date_publication": "2026-10-23T19:30:18.9209Z",
+      "nombre_annonce": 1756
+    },
+    "cwe": {
+      "version_catalogue": "4.20",
+      "date_catalogue": "2026-04-30",
+      "fichier_source": "cwec_v4.20.xml"
+    }
+  },
+  "chunks": {
+    "total_chunks": 4842,
+    "par_type": {
+      "campagne": 58,
+      "cve": 1756,
+      "cwe": 1227,
+      "groupe": 183,
+      "logiciel": 842,
+      "technique": 776
+    },
+    "tokens_min": 23,
+    "tokens_max": 500,
+    "tokens_moyen": 189,
+    "chunks_superieurs_500": 0,
+    "fichier": "data/processed/chunks.jsonl",
+    "versionne": false,
+    "sha256": "cee07dc0bfcba479ea8f43aa591b63428bfa3bdac416c5ce546dcf072003a3b8",
+    "regenerer_avec": "python -m data.build_all --offline"
+  },
+  "listes_identifiants": {
+    "mitre": {
+      "fichier": "data/processed/mitre_ids.txt",
+      "entrees": 1962,
+      "sha256": "55f955dc272c5c9339924e1622351fecbe4b78b6557dbd688a0d6db971347e6a",
+      "avertissement": "mitre_ids.txt contient tous les identifiants ATT&CK existants, y compris les objets obsoletes ou revoques : un identifiant existant n'est pas un identifiant a jour. Les chunks, eux, excluent les objets obsoletes."
+    },
+    "cve": {
+      "fichier": "data/processed/cve_ids.txt",
+      "entrees": 1756,
+      "sha256": "7e99dd2bfa5421b7b768ec2b595ffcdadfd7fda0f19ef35f430a6a7832f37766",
+      "avertissement": "cve_ids.txt ne contient que les CVE du catalogue CISA KEV (exploitees dans la nature). Une CVE reelle absente de KEV n'y figure pas : la metrique d'hallucination de l'etape 2 doit donc etre lue comme 'identifiant valide dans le perimetre de connaissance du systeme'."
+    },
+    "cwe": {
+      "fichier": "data/processed/cwe_ids.txt",
+      "entrees": 969,
+      "sha256": "488c540973590c9c7bf9d56d2de9400e32f166d9e886ec43f1d819e13e6d4422",
+      "avertissement": "cwe_ids.txt couvre le catalogue CWE complet (toutes abstractions, y compris les faiblesses obsoletes)."
+    }
+  }
+}

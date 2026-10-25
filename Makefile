@@ -60,8 +60,7 @@ fmt:  ## Formatage
 
 check: lint test  ## Verification avant PR
 
-data:  ## Reconstruction complete des jeux de donnees (etape 1)
-	@echo "Etape 1 non encore implementee : voir data/README.md"
+data:  ## Reconstruction complete des jeux de donnees (etape 1, bloc B)
 	@$(PYTHON) -m data.build_all
 
 clean:  ## Nettoie les caches locaux (ne touche pas aux donnees)

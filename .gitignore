@@ -67,6 +67,10 @@ data/interim/
 # à la reproductibilité). Ne pas les ignorer.
 !data/processed/.gitkeep
 !data/benchmark/.gitkeep
+# Exception : le corpus chunké est un artefact dérivé (5,5 Mo). Il est
+# reconstruit à l'identique par `make data`; son empreinte SHA-256 est
+# versionnée dans sources_manifest.json (section "chunks").
+data/processed/chunks.jsonl
 
 # --- Divers --------------------------------------------------------------
 .DS_Store
