@@ -3,6 +3,7 @@
 | Fichier | Contenu | Propriétaire |
 |---|---|---|
 | [`ARCHITECTURE.md`](ARCHITECTURE.md) | architecture v0, séquence du fil rouge, portée des modules | responsable d'intégration |
+| [`SCOPE.md`](SCOPE.md) | périmètre figé : 11 techniques, 9 types d'alertes, 6 actions, sévérités, validation | M1 |
 | [`ROLES.md`](ROLES.md) | 5 rôles, matrice RACI, interfaces figées, signatures | responsable d'intégration |
 | [`GIT_CONVENTIONS.md`](GIT_CONVENTIONS.md) | branches, commits, PR, fichiers interdits dans Git | responsable d'intégration |
 | [`HARDWARE.md`](HARDWARE.md) | inventaire du matériel, matrice INT8/INT4 | M3 |
