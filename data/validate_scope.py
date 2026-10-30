@@ -1,7 +1,7 @@
 """Validation du perimetre du projet (data/scope.json).
 
-Ce module ne valide pas des donnees : il valide le CONTRAT passe entre les
-5 membres a l'etape 1 (bloc A). Il est volontairement en bibliotheque standard
+Ce module ne valide pas des donnees : il valide le contrat de perimetre
+fixe a l'etape 1 (bloc A). Il est volontairement en bibliotheque standard
 uniquement, pour tourner partout sans installation.
 
 Usage :
@@ -338,7 +338,7 @@ def main(argv: list[str] | None = None) -> int:
         f"{len(scope['severities'])} niveaux de severite."
     )
     if scope["status"] != "validated":
-        print("Rappel : statut 'proposed' -> le bloc A n'est clos qu'apres signature des 5 membres.")
+        print("Rappel : statut 'proposed' -> le bloc A n'est clos qu'apres la revue en trois passes.")
     return 0
 
 

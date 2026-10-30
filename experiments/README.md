@@ -1,6 +1,6 @@
 # `experiments/` — Expériences et résultats
 
-**Rôle propriétaire** : responsable d'intégration, exécution par tous · **Étapes** : 2 à 12
+**Casquette transverse** : Responsable d'intégration · **Étapes** : 2 à 12
 
 Ce dossier contient **les scripts de comparaison et les résultats bruts**. Il ne
 contient pas de code de production : un script d'expérience peut être jetable,

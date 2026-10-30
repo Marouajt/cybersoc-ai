@@ -1,6 +1,6 @@
 # `agents/` — Orchestration agentique LangGraph
 
-**Rôle propriétaire** : M4 (Agents & sécurité) · **Étape** : 7
+**Casquette** : Agents & sécurité · **Étape** : 7
 
 ## Contrat d'interface
 

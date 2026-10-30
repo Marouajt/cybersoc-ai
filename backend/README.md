@@ -1,6 +1,6 @@
 # `backend/` — API FastAPI
 
-**Rôle propriétaire** : M5 (Web & LLMOps) · **Étape** : 11
+**Casquette** : Web & LLMOps · **Étape** : 11
 
 ## Contrat d'API (cible, étape 11)
 

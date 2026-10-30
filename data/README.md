@@ -1,6 +1,6 @@
 # `data/` — Données et jeu de test
 
-**Rôle propriétaire** : M1 (Données & RAG) · **Étapes** : 1 (puis lecture seule)
+**Casquette** : Données & RAG · **Étapes** : 1 (puis lecture seule)
 **C'est le module le plus critique du projet** : un jeu de test faible ou pollué
 invalide toutes les comparaisons des étapes 2 à 12.
 
@@ -85,4 +85,4 @@ python -c "import json,hashlib,pathlib; m=json.load(open('data/processed/sources
 - jeu trop facile (tous les cas malveillants contiennent « malware ») ;
 - déséquilibre de classes non mesuré ;
 - fuite train/test par quasi-doublons (utiliser `rapidfuzz`) ;
-- entités synthétiques absentes du graphe (coordonner avec M2 dès la semaine 1).
+- entités synthétiques absentes du graphe (coordonner avec la casquette Knowledge Graph dès la semaine 1).

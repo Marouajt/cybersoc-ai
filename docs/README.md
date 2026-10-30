@@ -2,15 +2,15 @@
 
 | Fichier | Contenu | Propriétaire |
 |---|---|---|
-| [`ARCHITECTURE.md`](ARCHITECTURE.md) | architecture v0, séquence du fil rouge, portée des modules | responsable d'intégration |
-| [`SCOPE.md`](SCOPE.md) | périmètre figé : 11 techniques, 9 types d'alertes, 6 actions, sévérités, validation | M1 |
-| [`ROLES.md`](ROLES.md) | 5 rôles, matrice RACI, interfaces figées, signatures | responsable d'intégration |
-| [`GIT_CONVENTIONS.md`](GIT_CONVENTIONS.md) | branches, commits, PR, fichiers interdits dans Git | responsable d'intégration |
-| [`HARDWARE.md`](HARDWARE.md) | inventaire du matériel, matrice INT8/INT4 | M3 |
-| [`PLANNING.md`](PLANNING.md) | calendrier, jalons, chemin critique, risques | responsable d'intégration |
+| [`ARCHITECTURE.md`](ARCHITECTURE.md) | architecture v0, séquence du fil rouge, portée des modules | Responsable d'intégration |
+| [`SCOPE.md`](SCOPE.md) | périmètre figé : 11 techniques, 9 types d'alertes, 6 actions, sévérités, validation | Données & RAG |
+| [`ROLES.md`](ROLES.md) | 5 rôles, matrice RACI, interfaces figées, signatures | Responsable d'intégration |
+| [`GIT_CONVENTIONS.md`](GIT_CONVENTIONS.md) | branches, commits, PR, fichiers interdits dans Git | Responsable d'intégration |
+| [`HARDWARE.md`](HARDWARE.md) | inventaire du matériel, matrice INT8/INT4 | Modèles & optimisation |
+| [`PLANNING.md`](PLANNING.md) | calendrier, jalons, chemin critique, risques | Responsable d'intégration |
 | [`DECISIONS.md`](DECISIONS.md) | journal des décisions (ADR-0001 à 0007) | tous (une entrée par décision) |
-| [`CHECKLIST_ETAPE0.md`](CHECKLIST_ETAPE0.md) | checklist de l'étape 0 | responsable d'intégration |
-| [`architecture/`](architecture/) | sources du schéma : `.mmd` (Mermaid) et `.drawio` (éditable) | responsable d'intégration |
+| [`CHECKLIST_ETAPE0.md`](CHECKLIST_ETAPE0.md) | checklist de l'étape 0 | Responsable d'intégration |
+| [`architecture/`](architecture/) | sources du schéma : `.mmd` (Mermaid) et `.drawio` (éditable) | Responsable d'intégration |
 
 ## Règle de tenue
 

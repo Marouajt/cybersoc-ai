@@ -1,6 +1,6 @@
 # `security/` — Réponse contrôlée et sécurité du LLM
 
-**Rôle propriétaire** : M4 (Agents & sécurité) · **Étapes** : 8 et 9
+**Casquette** : Agents & sécurité · **Étapes** : 8 et 9
 
 Ce module porte deux responsabilités distinctes : l'exécution sûre des actions
 (étape 8) et la sécurité du LLM lui-même (étape 9).

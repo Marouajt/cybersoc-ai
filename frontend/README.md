@@ -1,6 +1,6 @@
 # `frontend/` — Interface analyste (React + TypeScript)
 
-**Rôle propriétaire** : M5 (Web & LLMOps) · **Étape** : 11
+**Casquette** : Web & LLMOps · **Étape** : 11
 
 ## Écrans attendus
 

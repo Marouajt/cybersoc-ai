@@ -1,19 +1,19 @@
 # Inventaire du matériel de calcul
 
-> **Statut : à compléter par chaque membre avant la fin de la semaine 1.**
+> **Statut : à compléter avant la fin de la semaine 1.**
 > Ce document décide de deux choses : la taille maximale des SLM et le choix
-> INT8 ou INT4 (étapes 2 et 6). Tant qu'il est vide, l'équipe doit supposer le
+> INT8 ou INT4 (étapes 2 et 6). Tant qu'il est vide, il faut supposer le
 > pire cas (pas de GPU local) et travailler sur Colab/Kaggle.
 
-## 1. Tableau à remplir
+## 1. La machine
 
-| Membre | Machine (CPU / RAM) | GPU + VRAM | CUDA / pilote | Dispo GPU (h/semaine) | Colab | Kaggle | Serveur université | Rôle principal |
-|---|---|---|---|---|---|---|---|---|
-| `M1` | | | | | ☐ | ☐ | ☐ | Données & RAG |
-| `M2` | | | | | ☐ | ☐ | ☐ | Knowledge Graph |
-| `M3` | | | | | ☐ | ☐ | ☐ | Modèles & optimisation |
-| `M4` | | | | | ☐ | ☐ | ☐ | Agents & sécurité |
-| `M5` | | | | | ☐ | ☐ | ☐ | Web & LLMOps |
+Une seule machine porte les cinq casquettes : c'est la contrainte dimensionnante
+du projet, car il n'existe aucune machine de repli si elle est occupée ou tombe
+en panne.
+
+| Machine | CPU / RAM | GPU + VRAM | CUDA / pilote | Dispo GPU (h/semaine) | Colab | Kaggle | Serveur université |
+|---|---|---|---|---|---|---|---|
+| | | | | | ☐ | ☐ | ☐ |
 
 Commandes utiles pour remplir la ligne GPU :
 

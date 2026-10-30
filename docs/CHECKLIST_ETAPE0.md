@@ -1,19 +1,19 @@
 # Checklist — Étape 0 : cadrage et organisation
 
 Semaine 1 (26 oct – 1 nov 2026), durée prévue 2 à 3 jours.
-**Objectif** : permettre aux 5 membres de travailler en parallèle sans se bloquer.
+**Objectif** : disposer d'un socle stable pour démarrer l'étape 1 sans blocage.
 
 ## Livrables de l'étape
 
 | Livrable exigé | Où | État |
 |---|---|---|
 | Dépôt initialisé avec les 10 dossiers | racine | ✅ fait |
-| Rôles définis | [`docs/ROLES.md`](ROLES.md) | ⚠️ placeholders à remplacer par les prénoms |
+| Rôles définis | [`docs/ROLES.md`](ROLES.md) | ✅ cinq casquettes, plan de charge et tri (projet individuel) |
 | Schéma d'architecture v0 | [`docs/ARCHITECTURE.md`](ARCHITECTURE.md) + [`architecture/`](architecture/) | ✅ fait |
 | `docker-compose.yml` (Neo4j d'abord) | racine | ✅ fait (non exécuté ici : Docker absent de ce poste) |
-| Inventaire matériel | [`docs/HARDWARE.md`](HARDWARE.md) | ⚠️ à remplir par chaque membre |
+| Inventaire matériel | [`docs/HARDWARE.md`](HARDWARE.md) | ⚠️ à remplir (une seule machine) |
 
-**Critère de réussite** : `docker compose up` démarre Neo4j chez les 5 membres.
+**Critère de réussite** : `docker compose up` démarre Neo4j sur la machine de travail et en CI.
 
 ## Tâches de la feuille de route, une par une
 
@@ -60,8 +60,8 @@ docker compose up -d
 
 Les cinq cases suivantes doivent être vraies :
 
-- [ ] Les 5 membres ont cloné le dépôt et `docker compose up` démarre Neo4j chez chacun.
-- [ ] `docs/ROLES.md` ne contient plus aucun `M1`…`M5` et le responsable d'intégration est nommé.
+- [x] Le dépôt est publié et `docker compose up` démarre Neo4j (vérifié en CI).
+- [x] `docs/ROLES.md` décrit les cinq casquettes et le rôle d'intégration, tous portés par la même personne.
 - [ ] `docs/HARDWARE.md` est rempli et l'ADR sur INT8/INT4 est écrit.
 - [ ] `main` est protégée et une PR de test a été relue par un autre membre.
 - [ ] `docs/ARCHITECTURE.md` a été relu collectivement (une réunion de 30 min suffit) et la v0 est taguée `arch-v0`.

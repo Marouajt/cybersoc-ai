@@ -1,52 +1,77 @@
-# Calendrier du projet
+# Calendrier du projet — mené seul
 
-Échéance finale : **01/01/2027**. Équipe de 5. Semaine 1 = 26 octobre – 1er novembre 2026.
+Échéance finale : **01/01/2027**. Projet individuel : les étapes s'enchaînent,
+elles ne se parallélisent pas. Semaine 1 = 26 octobre – 1er novembre 2026.
 
-## 1. Vue par semaine
+## 1. Le cadrage temporel, sans illusion
 
-| Semaine | Dates approx. | Étapes principales | Jalon de sortie |
+| | |
+|---|---|
+| Jours calendaires restants (30 oct → 1er jan) | 63 |
+| Jours ouvrés réellement travaillables | **≈ 43** |
+| Travail estimé (voir [`ROLES.md`](ROLES.md) § 2) | ≈ 67 j |
+| Écart | **≈ −24 j** |
+
+Le plan ci-dessous n'est donc pas « tout faire » : c'est **tout couvrir, en
+réduisant la profondeur aux endroits choisis d'avance** dans [`ROLES.md`](ROLES.md) § 4.
+
+## 2. Semaines
+
+| Sem. | Dates | Objectif | Livrable vérifiable | Risque |
+|---|---|---|---|---|
+| **S1** | 26 oct – 1 nov | Cadrage, périmètre, socle de données — *en cours* | dépôt, `scope.json` gelé, corpus (4 842 chunks), 3 listes d'IDs | faible |
+| **S2** | 2 – 8 nov | Blocs C, D, E : schémas, monde simulé, 250 cas annotés | `test.jsonl` figé + `test.sha256` + `DATASHEET.md` | **élevé** — l'annotation est longue |
+| **S3** | 9 – 15 nov | Étape 2 : benchmark Qwen vs Phi (no-RAG), hallucinations | tableau comparatif + 1re section du rapport | moyen — dépend du GPU |
+| **S4** | 16 – 22 nov | Étape 3 : Vector-RAG, Recall@k, MRR | 4 modes comparés sur le test figé | moyen — **GO/NO-GO au 22 nov** |
+| **S5** | 23 – 29 nov | Étape 4 : Neo4j, Graph-RAG, Hybrid RRF | schéma peuplé + 3 requêtes Cypher utiles | moyen |
+| **S6** | 30 nov – 6 déc | Étape 5 : LoRA (+ démarrage du rapport) | adaptateur + manifeste + gain mesuré | **élevé** — GPU |
+| **S7** | 7 – 13 déc | Étape 6 : INT8/INT4, latence, coût (+ étape 7 amorcée) | tableau précision/latence/mémoire | moyen |
+| **S8** | 14 – 20 déc | Étape 7 : agents LangGraph + étape 8 : actions contrôlées | démo du fil rouge de bout en bout | **élevé** — intégration |
+| **S9** | 21 – 27 déc | Étape 9 sécurité + étape 10 LLMOps + étape 11 app | 5 attaques bloquées + 2 écrans | élevé |
+| **S10** | 28 déc – 1 jan | Étape 12 campagne finale + étape 13 rapport + étape 14 démo | rapport complet + vidéo | **très élevé** |
+
+Le rapport **commence en S6**, une section par semaine. Tout le rédiger en S10 est
+la première cause d'échec dans ce type de projet.
+
+## 3. Points de non-retour (go / no-go)
+
+| Date | Condition | Si non remplie |
+|---|---|---|
+| **8 nov** | jeu de test figé et hashé | on réduit le benchmark à 250 cas et on passe quand même : sans test figé, aucune comparaison n'a de valeur |
+| **22 nov** | étape 2 mesurée (au moins un modèle, mode no-RAG) | on abandonne le Graph-RAG profond ; le KG reste une perspective documentée |
+| **13 déc** | LoRA démarré ou abandon assumé | on abandonne le fine-tuning et on s'appuie sur la comparaison few-shot déjà mesurée |
+| **20 déc** | fil rouge exécutable en ligne de commande | l'application web est remplacée par une démo CLI + captures, documentée comme limite |
+
+## 4. Ce qui est buffer, et ce qui ne l'est pas
+
+Il n'y a **pas de semaine tampon**. Le seul amortisseur est le tri du § 4 de
+[`ROLES.md`](ROLES.md). Corollaire : une semaine perdue n'est pas rattrapable par
+du travail supplémentaire, elle se rattrape en réduisant le périmètre — décision
+qui doit être prise **le dimanche même**, pas trois semaines plus tard.
+
+## 5. Suivi hebdomadaire
+
+À remplir chaque dimanche, trois lignes (fait / en retard / décision).
+
+| Sem. | Fait | En retard | Décision |
 |---|---|---|---|
-| 1 | 26 oct – 1 nov | **0**, début de 1 | dépôt + rôles + architecture v0 ; Neo4j démarre chez les 5 |
-| 2 | 2 – 8 nov | 1, 2 | jeu de test figé et hashé ; premier tableau de benchmark |
-| 3 | 9 – 15 nov | 2, 3, 4 | Vector-RAG mesuré ; schéma Neo4j peuplé |
-| 4 | 16 – 22 nov | 3, 4, 5, 6 | **pipeline minimal de bout en bout** (risque n°1) |
-| 5 | 23 – 29 nov | 4, 5, 6, 7, 10 | Hybrid RAG + adaptateur LoRA versionné |
-| 6 | 30 nov – 6 déc | 6, 7, 8, 11 | 4 modes de RAG comparés sur le même script |
-| 7 | 7 – 13 déc | 7, 8, 9, 11 | workflow multi-agents complet avec approbation humaine |
-| 8 | 14 – 20 déc | 9, 10, 11, début de 12 | tableau ASR avant/après défenses |
-| 9 | 21 – 27 déc | 12, 13 | 6 comparaisons finales + README |
-| Marge | 28 – 31 déc | finalisation | vidéo, test sur machine propre, livraison |
+| S1 | | | |
+| S2 | | | |
+| S3 | | | |
+| S4 | | | |
+| S5 | | | |
+| S6 | | | |
+| S7 | | | |
+| S8 | | | |
+| S9 | | | |
+| S10 | | | |
 
-## 2. Jalons de contrôle
+## 6. Jalons du rapport
 
-| Jalon | Date cible | Critère vérifiable |
+| Jalon | Date | Contenu minimal |
 |---|---|---|
-| J0 — Cadrage terminé | 1 nov 2026 | `docker compose up` démarre Neo4j chez les 5 ; rôles signés ; architecture v0 commitée |
-| J1 — Données gelées | 8 nov 2026 | `test.jsonl` + hash + kappa > 0,8 ; `make data` relancé par un non-auteur |
-| J2 — Pipeline bout en bout | 22 nov 2026 | une alerte traverse alerte → RAG → action structurée, même dégradée |
-| J3 — Système complet | 13 déc 2026 | parcours complet dans l'interface web, approbation + sandbox + audit |
-| J4 — Résultats gelés | 27 déc 2026 | 6 comparaisons × 3 répétitions, moyennes et écarts-types |
-| J5 — Livraison | 31 déc 2026 | dépôt propre, README complet, vidéo ≤ 5 min |
-
-## 3. Chemin critique
-
-```
-étape 1 (données) ─┬─> étape 2 (benchmark) ─> étape 5 ─> étape 12
-                   ├─> étape 3 (Vector) ─┐
-                   └─> étape 4 (KG) ─────┴─> étape 7 ─> étape 8 ─> étape 11 ─> étape 12
-                                              étape 9 ─┘        étape 6 ─────┘
-```
-
-L'étape 1 bloque presque tout : toute dérive sur les données se propage
-directement à l'étape 12. C'est le seul livrable pour lequel il ne faut pas
-« voir plus tard ».
-
-## 4. Les 5 risques et leur parade
-
-| # | Risque | Parade concrète |
-|---|---|---|
-| 1 | Intégrer trop tard | jalon J2 (semaine 4) : pipeline minimal obligatoire, même en mode dégradé |
-| 2 | Jeu de test faible ou fuite train/test | split par `scenario_id`, hash SHA-256, contrôle de doublons, kappa > 0,8 avant de continuer |
-| 3 | Expériences non tracées | MLflow configuré dès la semaine 1 (profil `ops`), un run par résultat du rapport |
-| 4 | Modèles trop gros pour le matériel | plafond 1,5–4 Md de paramètres, arbitrage INT4/INT8 figé après `docs/HARDWARE.md` |
-| 5 | Rapport rédigé à la fin | chaque section du README est écrite dans la PR de l'étape correspondante |
+| Plan détaillé | 8 nov | sommaire figé, sections attribuées aux casquettes |
+| Chapitres 3 à 6 rédigés | 6 déc | données, benchmark, RAG/KG |
+| Chapitres 7 à 11 rédigés | 20 déc | agents, actions, sécurité, LLMOps, application |
+| Résultats et discussion | 27 déc | tableaux de l'étape 12, limites |
+| Relecture finale + dépôt | 31 déc | mise en forme, bibliographie, annexes |

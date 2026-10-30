@@ -1,6 +1,6 @@
 # `rag/` — Vector-RAG, Graph-RAG, Hybrid RAG
 
-**Rôles propriétaires** : M1 (vectoriel) et M2 (graphe) · **Étapes** : 3 et 4
+**Casquettes** : Données & RAG (vectoriel) et Knowledge Graph (graphe) · **Étapes** : 3 et 4
 
 ## Contrat d'interface
 

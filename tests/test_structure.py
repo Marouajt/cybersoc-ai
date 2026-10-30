@@ -1,7 +1,7 @@
 """Tests transverses de cohérence du dépôt (étape 0).
 
 Ces tests ne vérifient pas du code métier : ils garantissent que le squelette
-sur lequel les 5 membres vont travailler reste intact — arborescence imposée,
+sur lequel le projet va reposer reste intact — arborescence imposée,
 contrats documentés, service Neo4j déclaré, secrets non versionnés.
 
 Ils servent aussi de filet de sécurité en revue de PR : une PR qui casse la
