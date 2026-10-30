@@ -1,6 +1,6 @@
 # `models/` — SLM, fine-tuning, optimisation d'inférence
 
-**Rôle propriétaire** : M3 (Modèles & optimisation) · **Étapes** : 2, 5, 6
+**Casquette** : Modèles & optimisation · **Étapes** : 2, 5, 6
 
 ## Contrat d'interface
 
@@ -8,7 +8,7 @@
 |---|---|
 | `data/benchmark/test.jsonl` (figé, hashé) | tableau comparatif Qwen / Phi (`experiments/`) |
 | `data/benchmark/train.jsonl` | adaptateur LoRA versionné + manifeste |
-| configuration matérielle (`docs/HARDWARE.md`) | serveur LLM compatible OpenAI (`POST /v1/chat/completions`) consommé par M4 |
+| configuration matérielle (`docs/HARDWARE.md`) | serveur LLM compatible OpenAI (`POST /v1/chat/completions`) consommé par la casquette Agents & sécurité |
 
 Le serveur exposé à l'étape 6 est **l'interface critique** : l'étape 7 (agents)
 ne doit jamais importer `transformers` directement, seulement appeler l'endpoint.

@@ -1,7 +1,7 @@
 # Périmètre figé du projet (étape 1, bloc A)
 
-> **Statut : `proposed` — 0.1.0-draft.** Le bloc A n'est clos qu'après signature
-> des 5 membres (§ 11). Tant que le statut vaut `proposed`, aucun jeu de données
+> **Statut : `proposed` — 0.1.0-draft.** Le bloc A n'est clos qu'après la revue
+> en trois passes (§ 11). Tant que le statut vaut `proposed`, aucun jeu de données
 > ne doit être généré en masse : une modification du périmètre après coup
 > obligerait à tout régénérer.
 >
@@ -190,23 +190,57 @@ Toute modification **après** validation :
 
 1. incrémente `scope_version` et ajoute une entrée au `changelog` ;
 2. invalide le benchmark existant (il faudra régénérer et re-hasher) ;
-3. exige une PR dédiée, relue par un membre qui n'est pas l'auteur ;
+3. exige un commit dédié et daté (jamais une modification opportuniste glissée dans un autre travail) ;
 4. est signalée dans `DATASHEET.md` et dans la section « limites » du rapport.
 
-## 11. Validation par les 5 membres
+## 11. Revue et gel du périmètre (projet individuel)
 
-| Rôle | Membre | Avis | Date |
+La feuille de route prévoyait une validation par les 5 membres. Le projet étant
+mené **seul**, cette procédure est remplacée par une revue en trois passes :
+même fonction (ne pas figer un périmètre qu'on n'a pas relu), preuve différente
+(des dates et un tag Git plutôt que des signatures).
+
+### Passe 1 — cohérence interne (30 min)
+
+- [ ] chaque technique a un **jumeau bénin que je saurais reconnaître sans le modèle** ;
+- [ ] chaque type d'alerte est relié à au moins une technique ;
+- [ ] chaque action a une cible compatible (`host`, `ip`, `user`) ;
+- [ ] les 6 actions couvrent les réponses que ce périmètre peut exiger ;
+- [ ] aucun cas du périmètre n'exige une action absente de la liste ;
+- [ ] les 4 sévérités sont distinguables sur un exemple concret chacune.
+
+### Passe 2 — vérification factuelle (10 min)
+
+- [ ] `python -m data.validate_scope` passe sans erreur ;
+- [ ] les 11 identifiants existent dans le référentiel officiel (`pytest tests/test_ingest.py::test_perimetre_du_projet_existe_dans_attck`) ;
+- [ ] les libellés ATT&CK correspondent bien aux identifiants (pas d'ID juste avec le mauvais nom).
+
+### Passe 3 — faisabilité (20 min)
+
+- [ ] je sais produire un cas bénin crédible pour **chaque** technique ;
+- [ ] je sais produire un cas malveillant pour **chaque** technique ;
+- [ ] aucune technique ne dépend d'une télémétrie que je ne sais pas simuler ;
+- [ ] le volume visé (250–500 cas) reste atteignable avec le temps disponible.
+
+### Gel
+
+Une fois les trois passes faites, dans cet ordre :
+
+1. `status` → `"validated"`, `frozen_at` → date du jour, `scope_version` → `1.0.0` ;
+2. `python -m data.validate_scope` (le validateur exige une date dès que le statut vaut `validated`) ;
+3. `git tag -a scope-v1.0.0 -m "périmètre gelé"` puis push du tag.
+
+Le tag est la preuve horodatée que le périmètre a été figé **avant** les
+expériences — plus solide qu'une signature, puisqu'il est vérifiable par
+n'importe qui.
+
+| Passe | Date | Verdict | Remarques |
 |---|---|---|---|
-| Données & RAG | | ☐ accepté ☐ refusé | |
-| Knowledge Graph | | ☐ accepté ☐ refusé | |
-| Modèles & optimisation | | ☐ accepté ☐ refusé | |
-| Agents & sécurité | | ☐ accepté ☐ refusé | |
-| Web & LLMOps | | ☐ accepté ☐ refusé | |
+| 1 — cohérence interne | | ☐ conforme ☐ à corriger | |
+| 2 — vérification factuelle | | ☐ conforme ☐ à corriger | |
+| 3 — faisabilité | | ☐ conforme ☐ à corriger | |
 
-Quand les 5 lignes sont signées : passer `status` à `"validated"`, renseigner
-`frozen_at` avec la date, incrémenter `scope_version` en `1.0.0`, puis relancer
-`python -m data.validate_scope` (le validateur exige une date dès que le statut
-vaut `validated`).
+*Avis de l'encadrant (facultatif mais recommandé) :* date ……………… — ☐ favorable ☐ réserves
 
 ## 12. Journal
 

@@ -12,14 +12,14 @@
     {
       "version": "0.1.0-draft",
       "date": "2026-10-25",
-      "change": "Proposition initiale du perimetre : 11 techniques MITRE, 9 types d'alertes, 6 actions, 4 severites. En attente de validation par les 5 membres."
+      "change": "Proposition initiale du perimetre : 11 techniques MITRE, 9 types d'alertes, 6 actions, 4 severites. En attente de la revue en trois passes (projet individuel)."
     }
   ],
 
   "identity": {
     "note": "Ce fichier fige les VALEURS du perimetre (quelles techniques, quelles actions, quelles severites). Il ne fige pas les SCHEMAS de donnees : ceux-ci sont definis a la tache 4 (Bloc C) dans data/schemas.py.",
-    "owner": "M1 - Donnees & RAG",
-    "validation": "les 5 membres ; statut 'proposed' tant que docs/SCOPE.md n'est pas signe",
+    "owner": "Donnees & RAG (casquette unique)",
+    "validation": "revue en trois passes par l'auteur ; statut 'proposed' tant que la revue n'est pas consignee dans docs/SCOPE.md",
     "change_policy": "toute modification apres validation incremente scope_version, invalide le benchmark existant et impose de regenerer les donnees (nouveau hash)"
   },
 

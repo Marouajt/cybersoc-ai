@@ -1,6 +1,6 @@
 # `kg/` — Knowledge Graph Neo4j
 
-**Rôle propriétaire** : M2 (Knowledge Graph) · **Étape** : 4
+**Casquette** : Knowledge Graph · **Étape** : 4
 
 ## Contrat d'interface
 

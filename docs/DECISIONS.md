@@ -19,9 +19,9 @@ décision · conséquences.
 ## ADR-0002 — Docker Compose avec profil `ops`
 
 - **Date** : 2026-10-25 · **Statut** : accepté
-- **Contexte** : le critère de l'étape 0 exige `docker compose up` fonctionnel chez les cinq membres, dont certains ont une machine modeste. MLflow et Langfuse ne servent qu'à l'étape 10.
+- **Contexte** : le critère de l'étape 0 exige `docker compose up` fonctionnel sur la machine de travail, dont les ressources sont limitées. MLflow et Langfuse ne servent qu'à l'étape 10.
 - **Décision** : `docker compose up` ne démarre que Neo4j. MLflow est déclaré sous `profiles: ["ops"]`, donc lancé uniquement via `docker compose --profile ops up`. Langfuse est laissé hors du fichier (sa stack officielle est lourde : Postgres, ClickHouse, Redis, MinIO).
-- **Conséquences** : démarrage rapide et robuste partout ; l'observabilité est opt-in. Un membre qui n'a jamais lancé le profil `ops` ne peut pas reproduire les figures de l'étape 10 → le README doit le préciser.
+- **Conséquences** : démarrage rapide et robuste partout ; l'observabilité est opt-in. Si le profil `ops` n'a jamais été lancé, les figures de l'étape 10 ne sont pas reproductibles → le README doit le préciser.
 
 ## ADR-0003 — Neo4j 5 sans plugin au démarrage
 
@@ -35,7 +35,7 @@ décision · conséquences.
 - **Date** : 2026-10-25 · **Statut** : proposé (à confirmer à l'étape 10)
 - **Contexte** : deux options d'observabilité LLM sont citées par la feuille de route (Langfuse ou LangSmith). Langfuse est auto-hébergeable mais multi-services ; LangSmith est un SaaS.
 - **Décision** : ne rien trancher maintenant. MLflow couvre les runs et les métriques dès l'étape 2 (local, gratuit, suffisant). Le traçage des trajectoires d'agents sera réévalué à l'étape 7-10, quand le volume de traces sera connu.
-- **Conséquences** : `.env.example` réserve déjà `LANGFUSE_*` ; aucune dépendance n'est imposée à l'équipe avant d'en avoir besoin.
+- **Conséquences** : `.env.example` réserve déjà `LANGFUSE_*` ; aucune dépendance n'est imposée au projet avant d'en avoir besoin.
 
 ## ADR-0005 — `scenario_id` obligatoire dès le schéma initial
 
@@ -48,8 +48,8 @@ décision · conséquences.
 
 - **Date** : 2026-10-25 · **Statut** : accepté
 - **Contexte** : la règle « un commit par tâche » est explicite dans le sujet ; le squash-merge produirait un commit par PR (équivalent) mais casserait la correspondance tâche ↔ commit si une PR couvre plusieurs tâches.
-- **Décision** : une branche = une tâche, une PR = un commit (rebase interactif avant revue si nécessaire), fusion en **rebase and merge**. `main` est protégée, revue par un autre membre obligatoire.
-- **Conséquences** : historique linéaire et lisible, utilisé directement dans le rapport pour montrer la contribution de chacun.
+- **Décision** : une branche = une tâche, une PR = un commit (rebase interactif avant revue si nécessaire), fusion en **rebase and merge**. `main` est protégée ; chaque PR est relue avant fusion (en solo : relecture différée de 24 h minimum, checklist de PR remplie).
+- **Conséquences** : historique linéaire et lisible, utilisé directement dans le rapport pour montrer la contribution par casquette.
 
 ## ADR-0007 — Aucun poids de modèle dans Git
 
@@ -57,3 +57,10 @@ décision · conséquences.
 - **Contexte** : les adaptateurs LoRA et les modèles quantifiés pèsent de quelques dizaines de Mo à plusieurs Go.
 - **Décision** : `.gitignore` exclut `*.safetensors`, `*.gguf`, `*.bin`, `*.pt`. `models/MANIFEST.md` documente pour chaque artefact : modèle de base, révision Hugging Face, hash, paramètres d'entraînement, commande de reproduction. DVC reste optionnel.
 - **Conséquences** : dépôt léger et clonable ; la reproductibilité repose sur le manifeste, qui doit donc être tenu à jour à chaque étape 5 et 6.
+
+## ADR-0008 — Projet individuel : cinq casquettes au lieu de cinq membres
+
+- **Date** : 2026-10-30 · **Statut** : accepté
+- **Contexte** : la feuille de route est écrite pour cinq membres travaillant en parallèle sur dix semaines. Le projet est mené par une seule personne. Deux réponses possibles : réduire le périmètre, ou conserver la couverture et réduire la profondeur.
+- **Décision** : les cinq rôles sont conservés comme **casquettes** portées séquentiellement par la même personne, avec des contrats d'interface écrits entre elles. Un **tri de charge ordonné** est défini à l'avance (`docs/ROLES.md` § 4) et un **calendrier recalculé** avec points de non-retour (`docs/PLANNING.md`). Les obligations sociales (signatures, revue par un pair) sont remplacées par des preuves vérifiables : revue du périmètre en trois passes, gel par tag Git, relecture différée des PR.
+- **Conséquences** : le rapport peut revendiquer la couverture des cinq compétences sans simuler une équipe ; en contrepartie il doit annoncer explicitement ce qui est réduit, et la charge reste le risque principal (~67 jours de travail estimés pour ~43 jours ouvrés disponibles). La matrice RACI disparaît : elle n'a de sens qu'à plusieurs.

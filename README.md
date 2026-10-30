@@ -1,7 +1,7 @@
 # CyberSOC AI — assistant SOC intelligent
 
 > SLM · Hybrid RAG · Knowledge Graph · IA agentique · LLMOps
-> Projet académique — équipe de 5 — échéance **01/01/2027**
+> Projet académique individuel — cinq casquettes assumées par une seule personne — échéance **01/01/2027**
 
 Un SOC (Security Operations Center) reçoit des milliers d'alertes qu'il faut
 trier, enquêter, qualifier puis traiter. Ce projet construit un assistant IA qui
@@ -21,7 +21,7 @@ Alerte → Détection → Investigation RAG/KG → Analyse agentique → Explica
 | Étape | Contenu | Statut |
 |---|---|---|
 | 0 | Cadrage, dépôt, rôles, architecture v0, Docker | 🟡 **socle en place** — 3 points à finaliser (voir [`docs/CHECKLIST_ETAPE0.md`](docs/CHECKLIST_ETAPE0.md)) |
-| 1 | Données et jeu de test | 🟡 **bloc A rédigé** — périmètre en attente de signature des 5 membres ([`docs/SCOPE.md`](docs/SCOPE.md)) |
+| 1 | Données et jeu de test | 🟡 **blocs A et B faits** — périmètre en attente de la revue en trois passes ([`docs/SCOPE.md`](docs/SCOPE.md)) |
 | 2 | Benchmark des SLM | ⬜ |
 | 3 | Vector-RAG | ⬜ |
 | 4 | Knowledge Graph, Graph-RAG, Hybrid RAG | ⬜ |
@@ -172,26 +172,27 @@ agissent), **CVE / CISA KEV** (quelle faille précise est exploitée), **CWE**
 > sandbox sans effet réel, taille des modèles contrainte par le matériel,
 > couverture limitée à 8–12 techniques MITRE.
 
-## Organisation de l'équipe
+## Organisation du projet
 
-- Rôles, matrice RACI et interfaces figées : [`docs/ROLES.md`](docs/ROLES.md)
+- Casquettes, contrats d'interface et tri de charge : [`docs/ROLES.md`](docs/ROLES.md)
 - Règles Git et revue : [`docs/GIT_CONVENTIONS.md`](docs/GIT_CONVENTIONS.md)
 - Matériel de calcul : [`docs/HARDWARE.md`](docs/HARDWARE.md)
 - Décisions techniques (ADR) : [`docs/DECISIONS.md`](docs/DECISIONS.md)
 - Calendrier et jalons : [`docs/PLANNING.md`](docs/PLANNING.md)
 - Checklist de l'étape 0 : [`docs/CHECKLIST_ETAPE0.md`](docs/CHECKLIST_ETAPE0.md)
 
-### Contribution de chaque membre
+### Contribution par casquette
 
-> À compléter au fil du projet (une ligne par étape réalisée, reliée aux commits).
+> Le projet étant mené seul, cette table remplace la répartition entre membres :
+> elle montre ce qui a été produit sous chaque casquette, rattaché aux commits.
 
-| Membre | Rôle | Étapes | Contributions principales |
+| Casquette | Étapes | Période | Contributions principales |
 |---|---|---|---|
-| `M1` | Données & RAG | 1, 3 | — |
-| `M2` | Knowledge Graph | 4 | — |
-| `M3` | Modèles & optimisation | 2, 5, 6 | — |
-| `M4` | Agents & sécurité | 7, 8, 9 | — |
-| `M5` | Web & LLMOps | 10, 11 | — |
+| Données & RAG | 1, 3 | S1–S2, S4 | périmètre, corpus ATT&CK/KEV/CWE, chunks, listes d'IDs — commits `230d63b`, `20bd2be` |
+| Knowledge Graph | 4 | S5 | — |
+| Modèles & optimisation | 2, 5, 6 | S3, S6, S7 | — |
+| Agents & sécurité | 7, 8, 9 | S7–S9 | — |
+| Web & LLMOps | 10, 11 | S9 | — |
 
 ## Licence et sources
 
