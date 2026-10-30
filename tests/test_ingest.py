@@ -1,4 +1,4 @@
-"""Tests du bloc B : decoupage et artefacts produits.
+﻿"""Tests du bloc B : decoupage et artefacts produits.
 
 Deux familles :
   * tests unitaires du chunking, sur des textes synthetiques (toujours executes) ;
@@ -11,6 +11,7 @@ tournent donc en CI sans telechargement.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 from pathlib import Path
@@ -118,18 +119,22 @@ def test_objet_obsolete_exclu_du_corpus():
 
 # --- artefacts versionnes ------------------------------------------------
 
-pytestmark_integration = pytest.mark.skipif(
-    not CHUNKS.exists(), reason="data/processed absent : lancer `make data`"
+exige_artefacts = pytest.mark.skipif(
+    not (PROCESSED / "mitre_ids.txt").exists(),
+    reason="data/processed absent : lancer `python -m data.build_all --offline`",
+)
+exige_chunks = pytest.mark.skipif(
+    not CHUNKS.exists(),
+    reason="corpus dÃ©rivÃ© absent : lancer `python -m data.build_all --offline`",
 )
 
 
-@pytestmark_integration
+@exige_artefacts
 def test_artefacts_presents_et_non_vides():
     for nom in (
         "mitre_techniques.jsonl",
         "kev_cves.jsonl",
         "cwe_faiblesses.jsonl",
-        "chunks.jsonl",
         "mitre_ids.txt",
         "cve_ids.txt",
         "cwe_ids.txt",
@@ -140,7 +145,7 @@ def test_artefacts_presents_et_non_vides():
         assert chemin.stat().st_size > 0, f"{nom} vide"
 
 
-@pytestmark_integration
+@exige_artefacts
 def test_manifeste_coherent_avec_les_fichiers():
     manifeste = json.loads(
         (PROCESSED / "sources_manifest.json").read_text(encoding="utf-8")
@@ -158,7 +163,32 @@ def test_manifeste_coherent_avec_les_fichiers():
         assert fiche["entrees"] > 0
 
 
-@pytestmark_integration
+@exige_artefacts
+def test_manifeste_decrit_le_corpus_derive():
+    """Le corpus chunké n'est pas versionné : le manifeste doit le déclarer."""
+    manifeste = json.loads(
+        (PROCESSED / "sources_manifest.json").read_text(encoding="utf-8")
+    )
+    chunks = manifeste["chunks"]
+    assert chunks["versionne"] is False
+    assert len(chunks["sha256"]) == 64
+    assert chunks["total_chunks"] > 1000
+    assert chunks["regenerer_avec"].startswith("python -m data.build_all")
+
+
+@exige_chunks
+def test_corpus_derive_identique_au_manifeste():
+    """Si le corpus est présent, il doit correspondre à l'empreinte publiée."""
+    manifeste = json.loads(
+        (PROCESSED / "sources_manifest.json").read_text(encoding="utf-8")
+    )
+    empreinte = hashlib.sha256(CHUNKS.read_bytes()).hexdigest()
+    assert empreinte == manifeste["chunks"]["sha256"], (
+        "le corpus ne correspond plus au manifeste : relancer `make data`"
+    )
+
+
+@exige_artefacts
 def test_listes_identifiants_triees_et_uniques():
     for nom, motif in (
         ("mitre_ids", r"^[TGSC]\d{4}(\.\d{3})?$"),
@@ -171,7 +201,7 @@ def test_listes_identifiants_triees_et_uniques():
         assert all(re.match(motif, v) for v in valeurs), f"{nom} : format inattendu"
 
 
-@pytestmark_integration
+@exige_artefacts
 def test_perimetre_du_projet_existe_dans_attck():
     """Les 11 techniques de scope.json doivent exister dans le referentiel officiel."""
     identifiants = set(
@@ -186,7 +216,7 @@ def test_perimetre_du_projet_existe_dans_attck():
     assert absentes == [], f"techniques inventees dans scope.json : {absentes}"
 
 
-@pytestmark_integration
+@exige_chunks
 def test_chunks_valides_et_tracables():
     chunks = lire_jsonl(CHUNKS)
     assert len(chunks) > 1000
@@ -202,7 +232,7 @@ def test_chunks_valides_et_tracables():
         assert chunk["doc_id"].startswith(attendu)
 
 
-@pytestmark_integration
+@exige_chunks
 def test_texte_des_chunks_est_nettoye():
     """Aucun artefact web ne doit subsister dans le corpus indexe."""
     echantillon = lire_jsonl(CHUNKS)[:800]
@@ -211,7 +241,7 @@ def test_texte_des_chunks_est_nettoye():
         assert not re.search(r"\]\(https?://", chunk["texte"])
 
 
-@pytestmark_integration
+@exige_chunks
 def test_statistiques_coherentes_avec_les_chunks():
     chunks = lire_jsonl(CHUNKS)
     stats = statistiques(chunks)
